@@ -9,7 +9,6 @@ of the cost of the cheapest path from 'state' to a goal. For a MazeProblem,
 """
 
 import math
-
 import util
 
 
@@ -24,7 +23,10 @@ def manhattanHeuristic(state, problem):
         |row1 - row2| + |col1 - col2|
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    if problem is None:
+        return 0
+    goal = problem.getGoal()
+    return abs(state[0] - goal[0]) + abs(state[1] - goal[1])
 
 
 def euclideanHeuristic(state, problem):
@@ -32,4 +34,7 @@ def euclideanHeuristic(state, problem):
     Q6: the straight-line (Euclidean) distance from 'state' to problem.goal.
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    if problem is None:
+        return 0
+    goal = problem.getGoal()
+    return math.sqrt((state[0] - goal[0])**2 + (state[1] - goal[1])**2)
