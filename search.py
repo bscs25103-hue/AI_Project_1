@@ -127,7 +127,7 @@ def depthLimitedSearch(problem, limit):
     by not revisiting a state that is already on the current path.
     """
     "*** YOUR CODE HERE ***"
-    stack = Stack()
+    stack = util.Stack()
     startState = problem.getStartState()
     stack.push((startState, [], {startState}, 0))
     
