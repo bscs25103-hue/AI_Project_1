@@ -68,7 +68,12 @@ def depthFirstSearch(problem):
     (state, actionsSoFar) is an easy way to remember how you got there.
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    print("Start:", problem.getStartState())
+    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+    return GenericGraphSearch(problem , util.Stack())
 
 
 # ----------------------------------------------------------------------
@@ -77,7 +82,7 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first (graph search)."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return GenericGraphSearch(problem , util.Queue())
 
 
 # ----------------------------------------------------------------------
@@ -160,3 +165,37 @@ ids = iterativeDeepeningSearch
 ucs = uniformCostSearch
 gbfs = greedyBestFirstSearch
 astar = aStarSearch
+
+def GenericGraphSearch(problem, DataStruct, priorityFn=None):
+    
+    visited = set()
+    startState = problem.getStartState()
+    
+    startItem = (startState, [], 0)
+    
+    if priorityFn is not None:
+        DataStruct.push(startItem, priorityFn(startState, [], 0))
+    else:
+        DataStruct.push(startItem)
+        
+    while not DataStruct.isEmpty():
+        state, actions, cost = DataStruct.pop()
+        
+        if problem.isGoalState(state):
+            return actions
+            
+        if state not in visited:
+            visited.add(state)
+            
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    newActions = actions + [action]
+                    newCost = cost + stepCost
+                    newItem = (successor, newActions, newCost)
+                    
+                    if priorityFn is not None:
+                        DataStruct.push(newItem, priorityFn(successor, newActions, newCost))
+                    else:
+                        DataStruct.push(newItem)
+                        
+    return None
