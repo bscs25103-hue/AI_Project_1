@@ -11,6 +11,10 @@ of the cost of the cheapest path from 'state' to a goal. For a MazeProblem,
 import math
 import util
 
+"""
+Need to updated this file. Cant change the problem.py file.
+We look at this later.
+"""
 
 def nullHeuristic(state, problem=None):
     """The trivial heuristic: it knows nothing, so it always says 0."""
@@ -38,3 +42,4 @@ def euclideanHeuristic(state, problem):
         return 0
     goal = problem.getGoal()
     return math.sqrt((state[0] - goal[0])**2 + (state[1] - goal[1])**2)
+
