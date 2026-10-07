@@ -68,12 +68,33 @@ def depthFirstSearch(problem):
     (state, actionsSoFar) is an easy way to remember how you got there.
     """
     "*** YOUR CODE HERE ***"
+    visited = set()
+    startState = problem.getStartState()
+    DataStruct = util.Stack()
     
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    startItem = (startState, [], 0)
 
-    return GenericGraphSearch(problem , util.Stack())
+    DataStruct.push(startItem)
+        
+    while not DataStruct.isEmpty():
+        state, actions, cost = DataStruct.pop()
+        
+        if problem.isGoalState(state):
+            return actions
+            
+        if state not in visited:
+            visited.add(state)
+            
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    newActions = actions + [action]
+                    newCost = cost + stepCost
+                    newItem = (successor, newActions, newCost)
+                    
+                    
+                    DataStruct.push(newItem)
+                        
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -82,7 +103,6 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first (graph search)."""
     "*** YOUR CODE HERE ***"
-    return GenericGraphSearch(problem , util.Queue())
 
 
 # ----------------------------------------------------------------------
@@ -107,7 +127,29 @@ def depthLimitedSearch(problem, limit):
     by not revisiting a state that is already on the current path.
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    stack = Stack()
+    startState = problem.getStartState()
+    stack.push((startState, [], {startState}, 0))
+    
+    PathCut = False
+    
+    while not stack.isEmpty():
+        state, actions, path_set, depth = stack.pop()
+        
+        if problem.isGoalState(state):
+            return actions
+            
+        if depth < limit:
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in path_set:
+                    new_path = path_set.union({successor})
+                    stack.push((successor, actions + [action], new_path, depth + 1))
+        else:
+            PathCut = True
+
+    if PathCut:
+        return CUTOFF
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -120,7 +162,6 @@ def iterativeDeepeningSearch(problem, maxDepth=10000):
     (or none within maxDepth).
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
 
 # ----------------------------------------------------------------------
@@ -129,7 +170,6 @@ def iterativeDeepeningSearch(problem, maxDepth=10000):
 def uniformCostSearch(problem):
     """Search the node of least total path cost g(n) first (graph search)."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
 
 # ----------------------------------------------------------------------
@@ -141,7 +181,6 @@ def greedyBestFirstSearch(problem, heuristic=nullHeuristic):
     the lowest heuristic(state, problem) value (graph search).
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
 
 # ----------------------------------------------------------------------
@@ -153,7 +192,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     (graph search).
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
 
 # Abbreviations
@@ -165,37 +203,3 @@ ids = iterativeDeepeningSearch
 ucs = uniformCostSearch
 gbfs = greedyBestFirstSearch
 astar = aStarSearch
-
-def GenericGraphSearch(problem, DataStruct, priorityFn=None):
-    
-    visited = set()
-    startState = problem.getStartState()
-    
-    startItem = (startState, [], 0)
-    
-    if priorityFn is not None:
-        DataStruct.push(startItem, priorityFn(startState, [], 0))
-    else:
-        DataStruct.push(startItem)
-        
-    while not DataStruct.isEmpty():
-        state, actions, cost = DataStruct.pop()
-        
-        if problem.isGoalState(state):
-            return actions
-            
-        if state not in visited:
-            visited.add(state)
-            
-            for successor, action, stepCost in problem.getSuccessors(state):
-                if successor not in visited:
-                    newActions = actions + [action]
-                    newCost = cost + stepCost
-                    newItem = (successor, newActions, newCost)
-                    
-                    if priorityFn is not None:
-                        DataStruct.push(newItem, priorityFn(successor, newActions, newCost))
-                    else:
-                        DataStruct.push(newItem)
-                        
-    return None
