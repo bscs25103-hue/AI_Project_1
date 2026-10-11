@@ -140,7 +140,7 @@ def depthLimitedSearch(problem, limit):
             return actions
             
         if depth < limit:
-            for successor, action, stepCost in problem.getSuccessors(state):
+            for successor, action, stepCost in reversed(problem.getSuccessors(state)):
                 if successor not in path_set:
                     new_path = path_set.union({successor})
                     stack.push((successor, actions + [action], new_path, depth + 1))
