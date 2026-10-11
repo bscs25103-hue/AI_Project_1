@@ -69,10 +69,10 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     visited = set()
-    startState = problem.getStartState()
+    Start = problem.getStartState()
     DataStruct = util.Stack()
     
-    startItem = (startState, [], 0)
+    startItem = (Start, [], 0)
 
     DataStruct.push(startItem)
         
@@ -170,6 +170,26 @@ def iterativeDeepeningSearch(problem, maxDepth=10000):
 def uniformCostSearch(problem):
     """Search the node of least total path cost g(n) first (graph search)."""
     "*** YOUR CODE HERE ***"
+    DataStruct = util.PriorityQueue()
+    visited = set()
+    
+    Start = problem.getStartState()
+    DataStruct.push((Start, [], 0), 0)
+    
+    while not DataStruct.isEmpty():
+        state, actions, cost = DataStruct.pop()
+        
+        if problem.isGoalState(state):
+            return actions
+            
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    newCost = cost + stepCost
+                    DataStruct.push((successor, actions + [action], newCost), newCost)
+                    
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -192,7 +212,29 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     (graph search).
     """
     "*** YOUR CODE HERE ***"
-
+    DataStruct = util.PriorityQueue()
+    visited = set()
+    
+    Start = problem.getStartState()
+    CostVal = 0
+    HueVal = heuristic(Start, problem)
+    DataStruct.push((Start, [], CostVal), CostVal + HueVal)
+    
+    while not DataStruct.isEmpty():
+        state, actions, cost = DataStruct.pop()
+        
+        if problem.isGoalState(state):
+            return actions
+            
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    newCost = cost + stepCost
+                    priority = newCost + heuristic(successor, problem)
+                    DataStruct.push((successor, actions + [action], newCost), priority)
+                    
+    return None
 
 # Abbreviations
 always_right = alwaysRightSearch
