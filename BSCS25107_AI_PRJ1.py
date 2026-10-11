@@ -8,4 +8,6 @@ IDS recall DLS multiple times with increasing depth limit.
 For Implementation of GBFS. You can Copy AStar And only use the heuVal and remove CostVal
 and while setting priority in at the last third line remove NewCost only use Heuristic value.
 
+As Question 9 requried implementation of Question 8. I went ahead to Implement it
+
 """
