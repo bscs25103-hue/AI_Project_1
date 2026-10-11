@@ -27,9 +27,11 @@ def manhattanHeuristic(state, problem):
         |row1 - row2| + |col1 - col2|
     """
     "*** YOUR CODE HERE ***"
-    if problem is None:
+    if problem is None: 
         return 0
-    goal = problem.getGoal()
+    goal = problem.goal
+    if goal is None:
+        return 0
     return abs(state[0] - goal[0]) + abs(state[1] - goal[1])
 
 
@@ -40,6 +42,8 @@ def euclideanHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     if problem is None:
         return 0
-    goal = problem.getGoal()
+    goal = problem.goal
+    if goal is None:
+        return 0
     return math.sqrt((state[0] - goal[0])**2 + (state[1] - goal[1])**2)
 
