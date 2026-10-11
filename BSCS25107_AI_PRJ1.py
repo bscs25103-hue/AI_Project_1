@@ -5,4 +5,7 @@ Difference between DFS and BFS is just Data Structure. DFS uses Stack and BFS us
 
 IDS recall DLS multiple times with increasing depth limit.
 
+For Implementation of GBFS. You can Copy AStar And only use the heuVal and remove CostVal
+and while setting priority in at the last third line remove NewCost only use Heuristic value.
+
 """
