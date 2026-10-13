@@ -102,7 +102,24 @@ def depthFirstSearch(problem):
 # ----------------------------------------------------------------------
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first (graph search)."""
-    "*** YOUR CODE HERE ***"
+   
+  fringe = Queue()
+    expanded = set()
+
+    fringe.push((problem.getStartState(), []))
+
+    while not fringe.isEmpty():
+        state, actions = fringe.pop()
+
+        if problem.isGoalState(state):
+            return actions
+
+        if state not in expanded:
+            expanded.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                fringe.push((successor, actions + [action]))
+              
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -161,7 +178,12 @@ def iterativeDeepeningSearch(problem, maxDepth=10000):
     solution. Return that solution, or None if the problem has no solution
     (or none within maxDepth).
     """
-    "*** YOUR CODE HERE ***"
+   
+    for limit in range(maxDepth):          
+        result = depthLimitedSearch(problem, limit)
+        if result is not CUTOFF:         
+            return result
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -200,8 +222,23 @@ def greedyBestFirstSearch(problem, heuristic=nullHeuristic):
     Search the node that SEEMS closest to the goal first, i.e. the one with
     the lowest heuristic(state, problem) value (graph search).
     """
-    "*** YOUR CODE HERE ***"
+    fringe = PriorityQueue()
+    expanded = set()
 
+    start = problem.getStartState()
+    fringe.push((start, []), heuristic(start, problem))
+
+    while not fringe.isEmpty():
+        state, actions = fringe.pop()
+
+        if problem.isGoalState(state):
+            return actions
+
+        if state not in expanded:
+            expanded.add(state)
+            for succ, action, cost in problem.getSuccessors(state):
+                fringe.push((succ, actions + [action]), heuristic(succ, problem))
+    return None
 
 # ----------------------------------------------------------------------
 # Q7: A* Search
