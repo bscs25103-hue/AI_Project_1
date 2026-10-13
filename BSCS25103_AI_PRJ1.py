@@ -1,5 +1,7 @@
 
 import util
+from util import Stack, Queue, PriorityQueue, CUTOFF
+from heuristics import nullHeuristic
 
 def depthFirstSearch(problem):
     visited = set()
@@ -52,6 +54,55 @@ def depthLimitedSearch(problem, limit):
             PathCut = True
 
     if PathCut:
-        return CUTOFF
+        return util.CUTOFF
     return None
 
+
+def uniformCostSearch(problem):
+    DataStruct = util.PriorityQueue()
+    visited = set()
+    
+    Start = problem.getStartState()
+    DataStruct.push((Start, [], 0), 0)
+    
+    while not DataStruct.isEmpty():
+        state, actions, cost = DataStruct.pop()
+        
+        if problem.isGoalState(state):
+            return actions
+            
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    newCost = cost + stepCost
+                    DataStruct.push((successor, actions + [action], newCost), newCost)
+                    
+    return None
+
+
+def aStarSearch(problem, heuristic=nullHeuristic):
+
+    DataStruct = util.PriorityQueue()
+    visited = set()
+    
+    Start = problem.getStartState()
+    CostVal = 0
+    HueVal = heuristic(Start, problem)
+    DataStruct.push((Start, [], CostVal), CostVal + HueVal)
+    
+    while not DataStruct.isEmpty():
+        state, actions, cost = DataStruct.pop()
+        
+        if problem.isGoalState(state):
+            return actions
+            
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    newCost = cost + stepCost
+                    priority = newCost + heuristic(successor, problem)
+                    DataStruct.push((successor, actions + [action], newCost), priority)
+                    
+    return None

@@ -45,12 +45,13 @@ class KeyHuntProblem(SearchProblem):
     def getStartState(self):
         """Returns the start state, a tuple (startPosition, ...)."""
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (self.startPosition, self.keys)
 
     def isGoalState(self, state):
         """True when every code piece has been collected AND Thomas is at the exit."""
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        position, keys = state
+        return position == self.exit and len(keys) == 0
 
     def getSuccessors(self, state):
         """
@@ -66,7 +67,16 @@ class KeyHuntProblem(SearchProblem):
 
         successors = []
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        position, key = state
+        keys = set(key)
+        for action, nextPosition in self.maze.neighbors(position):
+            if nextPosition in keys:
+                newKeys = frozenset(k for k in keys if k != nextPosition)
+            else:
+                newKeys = key
+            
+            stepCost = self.maze.cost(nextPosition)
+            successors.append(((nextPosition, newKeys), action, stepCost))
         return successors
 
     # --- Provided: you do not need to change anything below -------------
@@ -111,4 +121,12 @@ def keyHuntHeuristic(state, problem):
     """
     position = state[0]
     "*** YOUR CODE HERE ***"
-    return 0   # the trivial (but consistent!) heuristic
+    keys = state[1]
+    
+    # If all keys have been collected, return the true distance to the exit
+    if not keys:
+        return mazeDistance(position, problem.exit, problem.maze, problem.heuristicInfo)
+    
+    minKeyDistance = min(mazeDistance(position, k, problem.maze, problem.heuristicInfo) for k in keys)
+    maxExitDistance = max(mazeDistance(k, problem.exit, problem.maze, problem.heuristicInfo) for k in keys)
+    return minKeyDistance + maxExitDistance

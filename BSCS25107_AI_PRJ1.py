@@ -2,7 +2,7 @@
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first (graph search)."""
    
-  fringe = Queue()
+    fringe = Queue()
     expanded = set()
 
     fringe.push((problem.getStartState(), []))
@@ -28,7 +28,7 @@ def iterativeDeepeningSearch(problem, maxDepth=10000):
     (or none within maxDepth).
     """
    
-    for limit in range(maxDepth):          
+    for limit in range(maxDepth + 1):          
         result = depthLimitedSearch(problem, limit)
         if result is not CUTOFF:         
             return result
@@ -76,7 +76,6 @@ def euclideanHeuristic(state, problem):
    
     goal = problem.goal
     return math.sqrt((state[0] - goal[0]) ** 2 + (state[1] - goal[1]) ** 2)
-    util.raiseNotDefined()
 
 """ QUESTION NO. 8 [ The Griever Hole ] """
 class KeyHuntProblem(SearchProblem):
