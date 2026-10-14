@@ -103,21 +103,21 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first (graph search)."""
    
-  fringe = Queue()
-    expanded = set()
+    edge = Queue()
+    visited = set()
 
-    fringe.push((problem.getStartState(), []))
+    edge.push((problem.getStartState(), []))
 
-    while not fringe.isEmpty():
-        state, actions = fringe.pop()
+    while not edge.isEmpty():
+        state, path = edge.pop()
 
         if problem.isGoalState(state):
-            return actions
+            return path
 
-        if state not in expanded:
-            expanded.add(state)
-            for successor, action, stepCost in problem.getSuccessors(state):
-                fringe.push((successor, actions + [action]))
+        if state not in visited:
+            visited.add(state)
+            for n_state, action, s_cost in problem.getSuccessors(state):
+                edge.push((n_state, path + [action]))
               
     return None
 
@@ -180,9 +180,9 @@ def iterativeDeepeningSearch(problem, maxDepth=10000):
     """
    
     for limit in range(maxDepth):          
-        result = depthLimitedSearch(problem, limit)
-        if result is not CUTOFF:         
-            return result
+        res = depthLimitedSearch(problem, limit)
+        if res is not CUTOFF:         
+            return res
     return None
 
 
@@ -222,22 +222,22 @@ def greedyBestFirstSearch(problem, heuristic=nullHeuristic):
     Search the node that SEEMS closest to the goal first, i.e. the one with
     the lowest heuristic(state, problem) value (graph search).
     """
-    fringe = PriorityQueue()
-    expanded = set()
+    edge = PriorityQueue()
+    visited = set()
 
     start = problem.getStartState()
-    fringe.push((start, []), heuristic(start, problem))
+    edge.push((start, []), heuristic(start, problem))
 
-    while not fringe.isEmpty():
-        state, actions = fringe.pop()
+    while not edge.isEmpty():
+        state, path = edge.pop()
 
         if problem.isGoalState(state):
-            return actions
+            return path
 
-        if state not in expanded:
-            expanded.add(state)
-            for succ, action, cost in problem.getSuccessors(state):
-                fringe.push((succ, actions + [action]), heuristic(succ, problem))
+        if state not in visited:
+            visited.add(state)
+            for n_state, action, cost in problem.getSuccessors(state):
+                edge.push((n_state, path + [action]), heuristic(n_state, problem))
     return None
 
 # ----------------------------------------------------------------------
