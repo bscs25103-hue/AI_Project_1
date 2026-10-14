@@ -123,10 +123,9 @@ def keyHuntHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     keys = state[1]
     
-    # If all keys have been collected, return the true distance to the exit
     if not keys:
         return mazeDistance(position, problem.exit, problem.maze, problem.heuristicInfo)
     
-    minKeyDistance = min(mazeDistance(position, k, problem.maze, problem.heuristicInfo) for k in keys)
+    maxKeyDistance = max(mazeDistance(position, k, problem.maze, problem.heuristicInfo) for k in keys)
     maxExitDistance = max(mazeDistance(k, problem.exit, problem.maze, problem.heuristicInfo) for k in keys)
-    return minKeyDistance + maxExitDistance
+    return maxKeyDistance + maxExitDistance
