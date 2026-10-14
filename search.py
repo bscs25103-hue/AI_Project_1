@@ -103,6 +103,23 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first (graph search)."""
     "*** YOUR CODE HERE ***"
+    edge = Queue()
+    visited = set()
+
+    edge.push((problem.getStartState(), []))
+
+    while not edge.isEmpty():
+        state, path = edge.pop()
+
+        if problem.isGoalState(state):
+            return path
+
+        if state not in visited:
+            visited.add(state)
+            for n_state, action, s_cost in problem.getSuccessors(state):
+                edge.push((n_state, path + [action]))
+              
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -162,6 +179,11 @@ def iterativeDeepeningSearch(problem, maxDepth=10000):
     (or none within maxDepth).
     """
     "*** YOUR CODE HERE ***"
+    for limit in range(maxDepth):          
+        res = depthLimitedSearch(problem, limit)
+        if res is not CUTOFF:         
+            return res
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -201,6 +223,23 @@ def greedyBestFirstSearch(problem, heuristic=nullHeuristic):
     the lowest heuristic(state, problem) value (graph search).
     """
     "*** YOUR CODE HERE ***"
+    edge = PriorityQueue()
+    visited = set()
+
+    start = problem.getStartState()
+    edge.push((start, []), heuristic(start, problem))
+
+    while not edge.isEmpty():
+        state, path = edge.pop()
+
+        if problem.isGoalState(state):
+            return path
+
+        if state not in visited:
+            visited.add(state)
+            for n_state, action, cost in problem.getSuccessors(state):
+                edge.push((n_state, path + [action]), heuristic(n_state, problem))
+    return None
 
 
 # ----------------------------------------------------------------------
